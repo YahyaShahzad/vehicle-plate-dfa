@@ -1,3 +1,6 @@
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://vehicle-plate-dfa.onrender.com)
+
+
 # Pakistan Vehicle Plate Validator (DFA Based)
 
 A web-based **Pakistan Vehicle Plate Validation System** built using 
