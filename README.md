@@ -95,28 +95,33 @@ This demonstrates **formal automata theory** applied to a practical web applicat
 ```bash
 git clone https://github.com/YahyaShahzad/vehicle-plate-dfa.git
 cd vehicle-plate-dfa
-Create and activate a virtual environment:
+```
+2. Create and activate a virtual envionment:
 
-bash
+```bash
 Copy code
 python -m venv venv
 source venv/bin/activate      # Linux/Mac
 venv\Scripts\activate         # Windows
-Install dependencies:
+```
+3. Install dependencies:
 
-bash
+```bash
 Copy code
 pip install -r requirements.txt
-Run the application:
+```
+4. Run the application:
 
-bash
+```bash
 Copy code
 python app.py
-Open the app in your browser:
+```
+5.Open the app in your browser:
 
-cpp
+```cpp
 Copy code
 http://127.0.0.1:5000
+```
 Note: For Render deployment, Flask is configured to use host=0.0.0.0 and the port from environment variables.
 
 Usage
@@ -138,22 +143,15 @@ Validation History: Last 20 validations
 
 Charts: Vehicle type & province distributions
 
-Project Screenshots
-Plate Input & Preview
-
-Validation History
-
-Charts
-
-(Add your own screenshots in a /screenshots folder)
 
 Live Demo
 Try the live demo here:
-Pakistan Vehicle Plate Validator
+[Pakistan Vehicle Plate Validator](https://vehicle-plate-dfa.onrender.com)
+
 
 License
 This project is licensed under the MIT License.
-See the LICENSE file for details.
+See the [License: MIT](LICENSE) file for details.
 
 Authors
 Yahya Shahzad – Developer & Project Lead
