@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Vehicle Plate Validator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: 'Poppins', sans-serif; background: #f4f6f9; margin:0; padding:0; color:#333; }
+.header { text-align:center; padding:1.5rem 1rem; background:#6987b4; color:#fff; }
+.header h1 { margin:0; font-size:2rem; }
+.header p { margin:0; opacity:0.9; }
+.team-info { margin-top:0.5rem; font-size:0.9rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; }
+.card { border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); padding:1rem; margin-bottom:1.5rem; background:#fff; }
+.quick-stats { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin:1rem 0; }
+.quick-stat { background:#e9ecef; padding:0.5rem 1rem; border-radius:8px; display:flex; align-items:center; gap:0.5rem; font-weight:500; }
+.plate-preview { width:300px; height:80px; border-radius:8px; padding:0 15px; display:flex; align-items:center; justify-content:space-between; border:2px solid #000; margin:auto; box-shadow:0 3px 10px rgba(0,0,0,0.15); }
+.plate-white { background:#fff; color:#000; }
+.plate-yellow { background:#ffc107; color:#000; }
+.plate-green { background:#198754; color:#fff; }
+.plate-black { background:#000; color:#fff; }
+#plateNumber { font-weight:bold; font-size:1.5rem; letter-spacing:3px; text-shadow:1px 1px 0 #aaa, -1px -1px 0 #aaa; }
+#provinceText { font-weight:bold; font-size:0.8rem; }
+.result-valid { color:#198754; font-weight:bold; }
+.result-invalid { color:#dc3545; font-weight:bold; }
+.history-list { max-height:250px; overflow-y:auto; }
+.history-item { display:flex; justify-content:space-between; padding:0.3rem 0.5rem; border-bottom:1px solid #ddd; }
+.history-item span { flex:1; text-align:center; font-size:0.85rem; }
+footer { background:#6987b4; color:#fff; text-align:center; padding:1rem; margin-top:1rem; font-size:0.9rem; }
+.stats-dashboard .card { margin-bottom:1rem; }
+
+/* Charts side by side */
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.chart-container .card {
+    flex: 1 1 45%;  /* ~45% width each */
+    min-width: 300px;
+    max-width: 500px;
+}
+.chart-container canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+@media(max-width:768px){ 
+    .quick-stats { flex-direction:column; }
+    .chart-container .card { flex:1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <h1><i class="fas fa-car"></i> Pakistan Vehicle Plate Validator</h1>
+    <p>Validate vehicle plates across all provinces</p>
+    <div class="team-info">
+        <span><i class="fas fa-users"></i> Developed by: Yahya Shahzad & Bilal Imtiaz</span>
+        <span><i class="fas fa-university"></i> UIT University</span>
+    </div>
+</header>
+
+<div class="container py-4">
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+        <div class="quick-stat"><i class="fas fa-id-card"></i> Plate: <strong id="quick-plate">{{ plate or 'N/A' }}</strong></div>
+        <div class="quick-stat"><i class="fas fa-map-marker-alt"></i> Province: <strong id="quick-province">{{ province or 'N/A' }}</strong></div>
+        <div class="quick-stat"><i class="fas fa-car-side"></i> Vehicle: <strong id="quick-vehicle">{{ vehicle_type or 'N/A' }}</strong></div>
+        <div class="quick-stat"><i class="fas fa-check-circle"></i> Result: <strong id="quick-result">{% if valid is not none %}{{ 'Valid' if valid else 'Invalid' }}{% else %}N/A{% endif %}</strong></div>
+    </div>
+
+    <!-- Plate Input & Preview -->
+    <div class="card">
+        <h3><i class="fas fa-keyboard"></i> Plate Input & Validation</h3>
+        <form method="POST" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="plate" class="form-label">Plate Number</label>
+                <input type="text" class="form-control" id="plate" name="plate" placeholder="E.g., L-1234" value="{{ plate }}">
+            </div>
+            <div class="col-md-3">
+                <label for="province" class="form-label">Province</label>
+                <select class="form-select" id="province" name="province" onchange="updatePlatePreview()">
+                    {% for p in provinces %}
+                        <option value="{{ p }}" {% if p==province %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="vehicle_type" class="form-label">Vehicle Type</label>
+                <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="updatePlatePreview()">
+                    {% for v in vehicle_types %}
+                        <option value="{{ v }}" {% if v==vehicle_type %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Validate</button>
+            </div>
+        </form>
+
+        {% if valid is not none %}
+        <div class="mt-3 p-3 border rounded">
+            <p>Result: <span class="{{ 'result-valid' if valid else 'result-invalid' }}">{{ "Valid" if valid else "Invalid" }}</span></p>
+            {% if note %}<p>{{ note }}</p>{% endif %}
+        </div>
+        {% endif %}
+
+        <div class="mt-4 text-center">
+            <div id="platePreview" class="plate-preview">
+                <div id="provinceText"></div>
+                <div id="plateNumber"></div>
+                <div id="logo"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Side by Side -->
+    <div class="chart-container">
+        <div class="card">
+            <h4><i class="fas fa-chart-pie"></i> Vehicle Type Distribution</h4>
+            <canvas id="vehicleChart"></canvas>
+        </div>
+        <div class="card">
+            <h4><i class="fas fa-chart-bar"></i> Province Distribution</h4>
+            <canvas id="provinceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Validation History -->
+    <div class="card">
+        <h4><i class="fas fa-history"></i> Last 20 Validations</h4>
+        <div class="history-list">
+            {% for record in history %}
+            <div class="history-item">
+                <span>{{ loop.index }}</span>
+                <span>{{ record.plate }}</span>
+                <span>{{ record.province }}</span>
+                <span>{{ record.vehicle_type }}</span>
+                <span class="{{ 'result-valid' if record.result=='Valid' else 'result-invalid' }}">{{ record.result }}</span>
+                <span>{{ record.time }}</span>
+            </div>
+            {% else %}
+            <div class="empty-history">No records yet</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 Pakistan Vehicle Plate Validator | Developed by Yahya Shahzad & Bilal Imtiaz
+</footer>
+
+<script>
+function updatePlatePreview() {
+    const province = document.getElementById('province').value;
+    const vehicleType = document.getElementById('vehicle_type').value;
+    const plateText = document.getElementById('plate').value.toUpperCase() || "L-1234";
+
+    const preview = document.getElementById('platePreview');
+    const numberDiv = document.getElementById('plateNumber');
+    const provinceDiv = document.getElementById('provinceText');
+    const logoDiv = document.getElementById('logo');
+
+    numberDiv.textContent = plateText;
+    provinceDiv.textContent = "";
+    logoDiv.innerHTML = "";
+
+    switch(province) {
+        case "Punjab": preview.className="plate-preview plate-white"; provinceDiv.textContent="PUNJAB"; break;
+        case "Sindh": preview.className=(vehicleType==="4-Wheeler"?"plate-preview plate-yellow":"plate-preview plate-white"); provinceDiv.textContent="SINDH"; break;
+        case "Balochistan": preview.className="plate-preview plate-white"; provinceDiv.textContent="BALOCHISTAN"; break;
+        case "Khyber Pakhtunkhwa": preview.className="plate-preview plate-white"; provinceDiv.textContent="KPK"; break;
+        case "Gilgit Baltistan": preview.className="plate-preview plate-black"; provinceDiv.textContent="GB"; break;
+        case "Azad Jammu & Kashmir": preview.className="plate-preview plate-white"; provinceDiv.textContent="AJK"; break;
+        case "Islamabad Capital Territory": preview.className=(vehicleType==="4-Wheeler"?"plate-preview plate-white":"plate-preview plate-black"); provinceDiv.textContent="ICT"; break;
+    }
+
+    const color = (preview.classList.contains("plate-black") || preview.classList.contains("plate-green")) ? "white" : "black";
+    logoDiv.innerHTML = `<svg viewBox="0 0 100 100" width="30" height="30"><circle cx="50" cy="50" r="45" stroke="${color}" stroke-width="5" fill="none" /></svg>`;
+
+    document.getElementById('quick-plate').textContent = plateText;
+    document.getElementById('quick-province').textContent = province;
+    document.getElementById('quick-vehicle').textContent = vehicleType;
+}
+updatePlatePreview();
+document.getElementById('plate').addEventListener('input', updatePlatePreview);
+document.getElementById('province').addEventListener('change', updatePlatePreview);
+document.getElementById('vehicle_type').addEventListener('change', updatePlatePreview);
+
+// Charts
+const vehicleCtx = document.getElementById('vehicleChart').getContext('2d');
+new Chart(vehicleCtx, {
+    type: 'doughnut',
+    data: { labels: {{ vehicle_labels|tojson }}, datasets: [{ data: {{ vehicle_data|tojson }}, backgroundColor: ['#0d6efd','#198754','#ffc107','#dc3545','#6f42c1'], borderWidth:1 }] },
+    options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+});
+
+const provinceCtx = document.getElementById('provinceChart').getContext('2d');
+new Chart(provinceCtx, {
+    type: 'bar',
+    data: { labels: {{ province_labels|tojson }}, datasets: [{ data: {{ province_data|tojson }}, backgroundColor:'#0d6efd' }] },
+    options: { responsive:true, scales:{ y:{ beginAtZero:true } } }
+});
+</script>
+
+</body>
+</html>
