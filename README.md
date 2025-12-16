@@ -124,7 +124,7 @@ http://127.0.0.1:5000
 ```
 Note: For Render deployment, Flask is configured to use host=0.0.0.0 and the port from environment variables.
 
-Usage
+## Usage
 Enter a plate number in the input box.
 
 Select the province from the dropdown.
@@ -144,21 +144,21 @@ Validation History: Last 20 validations
 Charts: Vehicle type & province distributions
 
 
-Live Demo
+## Live Demo
 Try the live demo here:
 [Pakistan Vehicle Plate Validator](https://vehicle-plate-dfa.onrender.com)
 
 
-License
+## License
 This project is licensed under the MIT License.
 See the [License: MIT](LICENSE) file for details.
 
-Authors
+## Authors
 Yahya Shahzad – Developer & Project Lead
 
 Bilal Imtiaz – Contributor
 
-Acknowledgements
+## Acknowledgements
 DFA theory: University Automata Lectures
 
 Chart.js for visualizations
