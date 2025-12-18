@@ -1,215 +1,1300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pakistan Vehicle Plate Validator</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body { font-family: 'Poppins', sans-serif; background: #f4f6f9; margin:0; padding:0; color:#333; }
-.header { text-align:center; padding:1.5rem 1rem; background:#6987b4; color:#fff; }
-.header h1 { margin:0; font-size:2rem; }
-.header p { margin:0; opacity:0.9; }
-.team-info { margin-top:0.5rem; font-size:0.9rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; }
-.card { border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); padding:1rem; margin-bottom:1.5rem; background:#fff; }
-.quick-stats { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin:1rem 0; }
-.quick-stat { background:#e9ecef; padding:0.5rem 1rem; border-radius:8px; display:flex; align-items:center; gap:0.5rem; font-weight:500; }
-.plate-preview { width:300px; height:80px; border-radius:8px; padding:0 15px; display:flex; align-items:center; justify-content:space-between; border:2px solid #000; margin:auto; box-shadow:0 3px 10px rgba(0,0,0,0.15); }
-.plate-white { background:#fff; color:#000; }
-.plate-yellow { background:#ffc107; color:#000; }
-.plate-green { background:#198754; color:#fff; }
-.plate-black { background:#000; color:#fff; }
-#plateNumber { font-weight:bold; font-size:1.5rem; letter-spacing:3px; text-shadow:1px 1px 0 #aaa, -1px -1px 0 #aaa; }
-#provinceText { font-weight:bold; font-size:0.8rem; }
-.result-valid { color:#198754; font-weight:bold; }
-.result-invalid { color:#dc3545; font-weight:bold; }
-.history-list { max-height:250px; overflow-y:auto; }
-.history-item { display:flex; justify-content:space-between; padding:0.3rem 0.5rem; border-bottom:1px solid #ddd; }
-.history-item span { flex:1; text-align:center; font-size:0.85rem; }
-footer { background:#6987b4; color:#fff; text-align:center; padding:1rem; margin-top:1rem; font-size:0.9rem; }
-.stats-dashboard .card { margin-bottom:1rem; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Registration Verification System - Pakistan</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #81C784;
+            --accent-color: #4CAF50;
+            --success-color: #4CAF50;
+            --danger-color: #F44336;
+            --warning-color: #FFC107;
+            --light-bg: #F1F8E9;
+            --dark-bg: #1B5E20;
+            --card-bg: #FFFFFF;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border-color: #C8E6C9;
+            --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-hover: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        }
 
-/* Charts side by side */
-.chart-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
-}
-.chart-container .card {
-    flex: 1 1 45%;  /* ~45% width each */
-    min-width: 300px;
-    max-width: 500px;
-}
-.chart-container canvas {
-    width: 100% !important;
-    height: 300px !important;
-}
-@media(max-width:768px){ 
-    .quick-stats { flex-direction:column; }
-    .chart-container .card { flex:1 1 100%; }
-}
-</style>
+        [data-theme="dark"] {
+            --primary-color: #4CAF50;
+            --secondary-color: #81C784;
+            --accent-color: #A5D6A7;
+            --success-color: #66BB6A;
+            --danger-color: #EF5350;
+            --warning-color: #FFCA28;
+            --light-bg: #263238;
+            --dark-bg: #1B5E20;
+            --card-bg: #37474F;
+            --text-primary: #ECEFF1;
+            --text-secondary: #B0BEC5;
+            --border-color: #4CAF50;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-hover: 0 14px 28px rgba(0,0,0,0.4), 0 10px 10px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 100px 0 50px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            max-width: 700px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 0;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Verification Section */
+        .verification-section {
+            padding: 3rem 0;
+        }
+
+        .verification-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .verification-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--card-bg);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            color: var(--text-primary);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+        }
+
+        .btn-verify {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-verify:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-verify i {
+            margin-right: 8px;
+        }
+
+        /* Result Alert */
+        .result-alert {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-alert i {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .result-alert.valid {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .result-alert.invalid {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        /* History Section */
+        .history-section {
+            padding: 3rem 0;
+        }
+
+        .history-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background-color: var(--light-bg);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+            background-color: var(--border-color);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-plate {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .history-result {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .history-result.valid {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .history-result.invalid {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        .history-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .history-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            padding: 3rem 0;
+        }
+
+        .chart-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            height: 100%;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 3rem 0;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 0.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .scroll-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+
+        /* Loading Spinner for Form */
+        .form-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid white;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+
+            .verification-card {
+                padding: 1.5rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
 </head>
 <body>
-
-<!-- Header -->
-<header class="header">
-    <h1><i class="fas fa-car"></i> Pakistan Vehicle Plate Validator</h1>
-    <p>Validate vehicle plates across all provinces</p>
-    <div class="team-info">
-        <span><i class="fas fa-users"></i> Developed by: Yahya Shahzad & Bilal Imtiaz</span>
-        <span><i class="fas fa-university"></i> UIT University</span>
-    </div>
-</header>
-
-<div class="container py-4">
-    <!-- Quick Stats -->
-    <div class="quick-stats">
-        <div class="quick-stat"><i class="fas fa-id-card"></i> Plate: <strong id="quick-plate">{{ plate or 'N/A' }}</strong></div>
-        <div class="quick-stat"><i class="fas fa-map-marker-alt"></i> Province: <strong id="quick-province">{{ province or 'N/A' }}</strong></div>
-        <div class="quick-stat"><i class="fas fa-car-side"></i> Vehicle: <strong id="quick-vehicle">{{ vehicle_type or 'N/A' }}</strong></div>
-        <div class="quick-stat"><i class="fas fa-check-circle"></i> Result: <strong id="quick-result">{% if valid is not none %}{{ 'Valid' if valid else 'Invalid' }}{% else %}N/A{% endif %}</strong></div>
-    </div>
-
-    <!-- Plate Input & Preview -->
-    <div class="card">
-        <h3><i class="fas fa-keyboard"></i> Plate Input & Validation</h3>
-        <form method="POST" class="row g-3 align-items-end">
-            <div class="col-md-6">
-                <label for="plate" class="form-label">Plate Number</label>
-                <input type="text" class="form-control" id="plate" name="plate" placeholder="E.g., L-1234" value="{{ plate }}">
-            </div>
-            <div class="col-md-3">
-                <label for="province" class="form-label">Province</label>
-                <select class="form-select" id="province" name="province" onchange="updatePlatePreview()">
-                    {% for p in provinces %}
-                        <option value="{{ p }}" {% if p==province %}selected{% endif %}>{{ p }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="vehicle_type" class="form-label">Vehicle Type</label>
-                <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="updatePlatePreview()">
-                    {% for v in vehicle_types %}
-                        <option value="{{ v }}" {% if v==vehicle_type %}selected{% endif %}>{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Validate</button>
-            </div>
-        </form>
-
-        {% if valid is not none %}
-        <div class="mt-3 p-3 border rounded">
-            <p>Result: <span class="{{ 'result-valid' if valid else 'result-invalid' }}">{{ "Valid" if valid else "Invalid" }}</span></p>
-            {% if note %}<p>{{ note }}</p>{% endif %}
-        </div>
-        {% endif %}
-
-        <div class="mt-4 text-center">
-            <div id="platePreview" class="plate-preview">
-                <div id="provinceText"></div>
-                <div id="plateNumber"></div>
-                <div id="logo"></div>
-            </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2>Loading Vehicle Verification System...</h2>
         </div>
     </div>
 
-    <!-- Charts Side by Side -->
-    <div class="chart-container">
-        <div class="card">
-            <h4><i class="fas fa-chart-pie"></i> Vehicle Type Distribution</h4>
-            <canvas id="vehicleChart"></canvas>
-        </div>
-        <div class="card">
-            <h4><i class="fas fa-chart-bar"></i> Province Distribution</h4>
-            <canvas id="provinceChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Validation History -->
-    <div class="card">
-        <h4><i class="fas fa-history"></i> Last 20 Validations</h4>
-        <div class="history-list">
-            {% for record in history %}
-            <div class="history-item">
-                <span>{{ loop.index }}</span>
-                <span>{{ record.plate }}</span>
-                <span>{{ record.province }}</span>
-                <span>{{ record.vehicle_type }}</span>
-                <span class="{{ 'result-valid' if record.result=='Valid' else 'result-invalid' }}">{{ record.result }}</span>
-                <span>{{ record.time }}</span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-car-side"></i>
+                Pakistan Vehicle Verification
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#verify">Verify</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#history">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#charts">Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            {% else %}
-            <div class="empty-history">No records yet</div>
-            {% endfor %}
         </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Pakistan Vehicle Registration Verification</h1>
+                        <p class="hero-subtitle">Instantly verify vehicle registration numbers across all provinces of Pakistan using our advanced DFA pattern matching system.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="#verify" class="btn btn-light btn-lg">
+                                <i class="fas fa-search me-2"></i>Verify Now
+                            </a>
+                            <a href="#features" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-info-circle me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://primeauto.pk/cdn/shop/files/Old_Punjab_embossed_standard_Number_plate_features.jpg?v=1765025514&width=1445" alt="Pakistan Vehicle Registration Plate" class="img-fluid rounded-3 shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3 col-6" data-aos="fade-up">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="stat-number" data-count="7">0</div>
+                        <div class="stat-label">Provinces Covered</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="stat-number" data-count="2">0</div>
+                        <div class="stat-label">Vehicle Types</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-number" data-count="24">0</div>
+                        <div class="stat-label">Hour Service</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-number" data-count="100">0</div>
+                        <div class="stat-label">% Secure</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Section -->
+    <section class="verification-section" id="verify">
+        <div class="container">
+            <div class="verification-card" data-aos="fade-up">
+                <h2 class="section-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Verify Vehicle Registration
+                </h2>
+                
+                <form method="POST" id="verificationForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select class="form-select" id="province" name="province" required>
+                                    {% for prov in provinces %}
+                                    <option value="{{ prov }}" {% if prov == province %}selected{% endif %}>{{ prov }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="province">
+                                    <i class="fas fa-map-marker-alt me-1"></i> Province
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select class="form-select" id="vehicle_type" name="vehicle_type" required>
+                                    {% for vt in vehicle_types %}
+                                    <option value="{{ vt }}" {% if vt == vehicle_type %}selected{% endif %}>{{ vt }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="vehicle_type">
+                                    <i class="fas fa-car me-1"></i> Vehicle Type
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="plate" name="plate" 
+                                       placeholder="Registration Number" value="{{ plate }}" required>
+                                <label for="plate">
+                                    <i class="fas fa-id-card me-1"></i> Registration Number
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-verify" id="verifyButton">
+                            <i class="fas fa-check-circle"></i>
+                            Verify Now
+                            <div class="form-spinner" id="formSpinner"></div>
+                        </button>
+                    </div>
+                </form>
+                
+                {% if valid is not none %}
+                <div class="result-alert {% if valid %}valid{% else %}invalid{% endif %}">
+                    <i class="fas {% if valid %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                    <div>
+                        <h4>{% if valid %}Valid Registration Number{% else %}Invalid Registration Number{% endif %}</h4>
+                        <p>{% if note %}{{ note }}{% else %}The registration number {{ plate }} is {% if valid %}valid{% else %}invalid{% endif %} for {{ province }} {{ vehicle_type }}.{% endif %}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="history-section" id="history">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="history-card" data-aos="fade-up">
+                        <h3 class="section-title">
+                            <i class="fas fa-history"></i>
+                            Recent Verifications
+                        </h3>
+                        <div class="history-list" id="historyList">
+                            {% if history %}
+                                {% for item in history %}
+                                <div class="history-item">
+                                    <div class="history-item-header">
+                                        <div class="history-plate">{{ item.plate }}</div>
+                                        <div class="history-result {% if item.result == 'Valid' %}valid{% else %}invalid{% endif %}">
+                                            {{ item.result }}
+                                        </div>
+                                    </div>
+                                    <div class="history-details">
+                                        {{ item.province }} - {{ item.vehicle_type }}
+                                    </div>
+                                    <div class="history-time">
+                                        <i class="far fa-clock me-1"></i>
+                                        {{ item.time }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No verification history yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Vehicle Types Distribution
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="vehicleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section" id="charts">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card" data-aos="fade-up">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Province Distribution
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="provinceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            Verification Trend
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">Why Choose Our System?</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="feature-title">Lightning Fast</h3>
+                        <p class="feature-description">Get instant verification results in under 3 seconds with our optimized DFA pattern matching algorithm.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Nationwide Coverage</h3>
+                        <p class="feature-description">Verify vehicle registrations from all 7 provinces and territories of Pakistan with our comprehensive database.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Secure & Reliable</h3>
+                        <p class="feature-description">Our system uses advanced security measures to protect your data and provide accurate verification results.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://verifyvehicle.pk/wp-content/uploads/2024/07/MTMIS-Pakistan-1.webp" alt="Pakistan Traffic" class="img-fluid rounded-3 shadow">
+                </div>
+                <div class="col-md-6 d-flex align-items-center" data-aos="fade-up" data-aos-delay="500">
+                    <div>
+                        <h3 class="mb-3">About Pakistan Vehicle Registration</h3>
+                        <p>Pakistan's vehicle registration system varies by province, with each region having its own format and numbering scheme. Our system uses Deterministic Finite Automaton (DFA) technology to accurately validate registration numbers according to provincial standards.</p>
+                        <p>From the bustling streets of Karachi to the mountainous regions of Gilgit-Baltistan, our verification system covers all vehicle types and registration formats across the country.</p>
+                        <a href="#verify" class="btn btn-success mt-3">
+                            <i class="fas fa-search me-2"></i>Try Verification Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-car-side me-2"></i>
+                        Pakistan Vehicle Verification
+                    </div>
+                    <p class="text-white-50">Advanced vehicle registration verification system for Pakistan using DFA pattern matching technology.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#verify">Verify</a></li>
+                        <li><a href="#history">History</a></li>
+                        <li><a href="#charts">Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="text-white mb-3">Contact Info</h5>
+                    <p class="text-white-50">
+                        <i class="fas fa-map-marker-alt me-2"></i> Karachi, Pakistan<br>
+                        <i class="fas fa-phone me-2"></i> +92 0345 1902640<br>
+                        <i class="fas fa-envelope me-2"></i> pakcheck@uitu.edu
+                    </p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Vehicle Verification System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
     </div>
-</div>
 
-<footer>
-    &copy; 2025 Pakistan Vehicle Plate Validator | Developed by Yahya Shahzad & Bilal Imtiaz
-</footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
 
-<script>
-function updatePlatePreview() {
-    const province = document.getElementById('province').value;
-    const vehicleType = document.getElementById('vehicle_type').value;
-    const plateText = document.getElementById('plate').value.toUpperCase() || "L-1234";
+        // Hide loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
 
-    const preview = document.getElementById('platePreview');
-    const numberDiv = document.getElementById('plateNumber');
-    const provinceDiv = document.getElementById('provinceText');
-    const logoDiv = document.getElementById('logo');
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', currentTheme);
+        
+        // Update icon based on current theme
+        if (currentTheme === 'dark') {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            const theme = htmlElement.getAttribute('data-theme');
+            const newTheme = theme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            themeToggle.innerHTML = newTheme === 'dark' ? 
+                '<i class="fas fa-sun"></i>' : 
+                '<i class="fas fa-moon"></i>';
+            
+            // Update chart colors if they exist
+            updateChartColors();
+        });
 
-    numberDiv.textContent = plateText;
-    provinceDiv.textContent = "";
-    logoDiv.innerHTML = "";
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('[data-count]');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const animate = () => {
+                    const value = +counter.getAttribute('data-count');
+                    const data = +counter.innerText;
+                    const time = value / speed;
+                    
+                    if (data < value) {
+                        counter.innerText = Math.ceil(data + time);
+                        setTimeout(animate, 1);
+                    } else {
+                        counter.innerText = value;
+                    }
+                }
+                
+                animate();
+            });
+        }
 
-    switch(province) {
-        case "Punjab": preview.className="plate-preview plate-white"; provinceDiv.textContent="PUNJAB"; break;
-        case "Sindh": preview.className=(vehicleType==="4-Wheeler"?"plate-preview plate-yellow":"plate-preview plate-white"); provinceDiv.textContent="SINDH"; break;
-        case "Balochistan": preview.className="plate-preview plate-white"; provinceDiv.textContent="BALOCHISTAN"; break;
-        case "Khyber Pakhtunkhwa": preview.className="plate-preview plate-white"; provinceDiv.textContent="KPK"; break;
-        case "Gilgit Baltistan": preview.className="plate-preview plate-black"; provinceDiv.textContent="GB"; break;
-        case "Azad Jammu & Kashmir": preview.className="plate-preview plate-white"; provinceDiv.textContent="AJK"; break;
-        case "Islamabad Capital Territory": preview.className=(vehicleType==="4-Wheeler"?"plate-preview plate-white":"plate-preview plate-black"); provinceDiv.textContent="ICT"; break;
-    }
+        // Trigger counter animation when stats section is in view
+        const statsSection = document.querySelector('.stats-section');
+        const observerOptions = {
+            threshold: 0.5
+        };
+        
+        const observer = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
 
-    const color = (preview.classList.contains("plate-black") || preview.classList.contains("plate-green")) ? "white" : "black";
-    logoDiv.innerHTML = `<svg viewBox="0 0 100 100" width="30" height="30"><circle cx="50" cy="50" r="45" stroke="${color}" stroke-width="5" fill="none" /></svg>`;
+        // Chart data from Flask backend
+        const vehicleLabels = {{ vehicle_labels|tojson }};
+        const vehicleData = {{ vehicle_data|tojson }};
+        const provinceLabels = {{ province_labels|tojson }};
+        const provinceData = {{ province_data|tojson }};
 
-    document.getElementById('quick-plate').textContent = plateText;
-    document.getElementById('quick-province').textContent = province;
-    document.getElementById('quick-vehicle').textContent = vehicleType;
-}
-updatePlatePreview();
-document.getElementById('plate').addEventListener('input', updatePlatePreview);
-document.getElementById('province').addEventListener('change', updatePlatePreview);
-document.getElementById('vehicle_type').addEventListener('change', updatePlatePreview);
+        // Initialize charts with backend data
+        const vehicleCtx = document.getElementById('vehicleChart').getContext('2d');
+        const vehicleChart = new Chart(vehicleCtx, {
+            type: 'doughnut',
+            data: {
+                labels: vehicleLabels.length > 0 ? vehicleLabels : ['2-Wheeler', '4-Wheeler'],
+                datasets: [{
+                    data: vehicleData.length > 0 ? vehicleData : [0, 0],
+                    backgroundColor: [
+                        'rgba(76, 175, 80, 0.8)',
+                        'rgba(46, 125, 50, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(76, 175, 80, 1)',
+                        'rgba(46, 125, 50, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
-// Charts
-const vehicleCtx = document.getElementById('vehicleChart').getContext('2d');
-new Chart(vehicleCtx, {
-    type: 'doughnut',
-    data: { labels: {{ vehicle_labels|tojson }}, datasets: [{ data: {{ vehicle_data|tojson }}, backgroundColor: ['#0d6efd','#198754','#ffc107','#dc3545','#6f42c1'], borderWidth:1 }] },
-    options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
-});
+        const provinceCtx = document.getElementById('provinceChart').getContext('2d');
+        const provinceChart = new Chart(provinceCtx, {
+            type: 'bar',
+            data: {
+                labels: provinceLabels.length > 0 ? provinceLabels : ['Punjab', 'Sindh', 'Balochistan', 'Khyber Pakhtunkhwa', 'Gilgit Baltistan', 'Azad Jammu & Kashmir', 'Islamabad Capital Territory'],
+                datasets: [{
+                    label: 'Number of Verifications',
+                    data: provinceData.length > 0 ? provinceData : [0, 0, 0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(76, 175, 80, 0.8)',
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
 
-const provinceCtx = document.getElementById('provinceChart').getContext('2d');
-new Chart(provinceCtx, {
-    type: 'bar',
-    data: { labels: {{ province_labels|tojson }}, datasets: [{ data: {{ province_data|tojson }}, backgroundColor:'#0d6efd' }] },
-    options: { responsive:true, scales:{ y:{ beginAtZero:true } } }
-});
-</script>
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Valid Verifications',
+                    data: [65, 78, 90, 81, 96, 105, 120],
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Invalid Verifications',
+                    data: [28, 35, 40, 32, 45, 50, 55],
+                    borderColor: 'rgba(244, 67, 54, 1)',
+                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
+        // Update chart colors based on theme
+        function updateChartColors() {
+            const isDark = htmlElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#ECEFF1' : '#212121';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            // Update vehicle chart
+            vehicleChart.options.plugins.legend.labels.color = textColor;
+            vehicleChart.update();
+            
+            // Update province chart
+            provinceChart.options.scales.x.ticks.color = textColor;
+            provinceChart.options.scales.y.ticks.color = textColor;
+            provinceChart.options.scales.x.grid.color = gridColor;
+            provinceChart.options.scales.y.grid.color = gridColor;
+            provinceChart.update();
+            
+            // Update trend chart
+            trendChart.options.scales.x.ticks.color = textColor;
+            trendChart.options.scales.y.ticks.color = textColor;
+            trendChart.options.scales.x.grid.color = gridColor;
+            trendChart.options.scales.y.grid.color = gridColor;
+            trendChart.options.plugins.legend.labels.color = textColor;
+            trendChart.update();
+        }
+
+        // Scroll to Top Button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('active');
+            } else {
+                scrollTopBtn.classList.remove('active');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submission handling
+        const verificationForm = document.getElementById('verificationForm');
+        const verifyButton = document.getElementById('verifyButton');
+        const formSpinner = document.getElementById('formSpinner');
+        
+        verificationForm.addEventListener('submit', function(e) {
+            // Show loading state
+            formSpinner.style.display = 'inline-block';
+            verifyButton.disabled = true;
+        });
+    </script>
 </body>
 </html>
